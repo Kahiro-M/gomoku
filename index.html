@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>量子五目並べ - ソースコード更新: 2025-02-25</title>
+    <title>量子五目並べ</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .board {
@@ -63,7 +63,7 @@
 
             function saveBoardState() {
                 previousBoard = [];
-                previousSuperpositions = JSON.parse(JSON.stringify(superpositions));
+                previousSuperpositions = [...superpositions];
                 $(".cell").each(function () {
                     previousBoard.push($(this).text());
                 });
@@ -72,10 +72,10 @@
 
             function restoreBoardState() {
                 if (boardStateSaved) {
-                    superpositions = JSON.parse(JSON.stringify(previousSuperpositions)); // スーパーポジションを復元
                     $(".cell").each(function (index) {
                         $(this).text(previousBoard[index]);
                     });
+                    superpositions = [...previousSuperpositions];
                     boardStateSaved = false;
                 }
             }
@@ -100,7 +100,7 @@
                     }
                     $(`.cell[data-row='${row}'][data-col='${col}']`).text(finalPlayer);
                 });
-                previousSuperpositions = JSON.parse(JSON.stringify(superpositions)); // スーパーポジションを保存
+                previousSuperpositions = [...superpositions]; // スーパーポジションを保存
                 superpositions = [];
                 boardStateSaved = false; // 次回の確定で正しく動作させるためにリセット
                 updateCurrentPlayer();
