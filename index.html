@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>量子五目並べ</title>
+    <title>量子五目並べ - ソースコード更新: 2025-02-25</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .board {
@@ -33,7 +33,7 @@
     </style>
 </head>
 <body>
-    <h1>量子五目並べ20250225 1810</h1>
+    <h1>量子五目並べ</h1>
     <div id="current-player">先手: X</div>
     <div class="board" id="board"></div>
     <button id="collapse">量子状態を確定</button>
@@ -72,10 +72,10 @@
 
             function restoreBoardState() {
                 if (boardStateSaved) {
+                    superpositions = JSON.parse(JSON.stringify(previousSuperpositions)); // スーパーポジションを復元
                     $(".cell").each(function (index) {
                         $(this).text(previousBoard[index]);
                     });
-                    superpositions = JSON.parse(JSON.stringify(previousSuperpositions));
                     boardStateSaved = false;
                 }
             }
