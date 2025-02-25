@@ -93,15 +93,16 @@
 
             $("#collapse").click(function () {
                 if (!boardStateSaved) saveBoardState();
-                superpositions.forEach(({ row, col, player }, index) => {
+                superpositions.forEach(({ row, col, player }) => {
                     let finalPlayer = player;
                     if (Math.random() < 0.1) {
                         finalPlayer = player === "X" ? "O" : "X";
                     }
                     $(`.cell[data-row='${row}'][data-col='${col}']`).text(finalPlayer);
                 });
-                previousSuperpositions = [];
+                previousSuperpositions = [...superpositions]; // スーパーポジションを保存
                 superpositions = [];
+                boardStateSaved = false; // 次回の確定で正しく動作させるためにリセット
                 updateCurrentPlayer();
             });
 
