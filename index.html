@@ -63,7 +63,7 @@
 
             function saveBoardState() {
                 previousBoard = [];
-                previousSuperpositions = [...superpositions];
+                previousSuperpositions = JSON.parse(JSON.stringify(superpositions));
                 $(".cell").each(function () {
                     previousBoard.push($(this).text());
                 });
@@ -75,7 +75,7 @@
                     $(".cell").each(function (index) {
                         $(this).text(previousBoard[index]);
                     });
-                    superpositions = [...previousSuperpositions];
+                    superpositions = JSON.parse(JSON.stringify(previousSuperpositions));
                     boardStateSaved = false;
                 }
             }
@@ -100,7 +100,7 @@
                     }
                     $(`.cell[data-row='${row}'][data-col='${col}']`).text(finalPlayer);
                 });
-                previousSuperpositions = [...superpositions]; // スーパーポジションを保存
+                previousSuperpositions = JSON.parse(JSON.stringify(superpositions)); // スーパーポジションを保存
                 superpositions = [];
                 boardStateSaved = false; // 次回の確定で正しく動作させるためにリセット
                 updateCurrentPlayer();
