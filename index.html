@@ -46,6 +46,7 @@
             let player = "X";
             let superpositions = [];
             let previousBoard = [];
+            let previousSuperpositions = [];
             let boardStateSaved = false;
 
             function updateCurrentPlayer() {
@@ -62,6 +63,7 @@
 
             function saveBoardState() {
                 previousBoard = [];
+                previousSuperpositions = [...superpositions];
                 $(".cell").each(function () {
                     previousBoard.push($(this).text());
                 });
@@ -73,6 +75,7 @@
                     $(".cell").each(function (index) {
                         $(this).text(previousBoard[index]);
                     });
+                    superpositions = [...previousSuperpositions];
                     boardStateSaved = false;
                 }
             }
@@ -90,20 +93,20 @@
 
             $("#collapse").click(function () {
                 if (!boardStateSaved) saveBoardState();
-                superpositions.forEach(({ row, col, player }) => {
+                superpositions.forEach(({ row, col, player }, index) => {
                     let finalPlayer = player;
                     if (Math.random() < 0.1) {
                         finalPlayer = player === "X" ? "O" : "X";
                     }
                     $(`.cell[data-row='${row}'][data-col='${col}']`).text(finalPlayer);
                 });
+                previousSuperpositions = [];
                 superpositions = [];
                 updateCurrentPlayer();
             });
 
             $("#undo").click(function () {
                 restoreBoardState();
-                superpositions = [];
                 updateCurrentPlayer();
             });
 
