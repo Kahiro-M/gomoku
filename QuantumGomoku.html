@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>量子五目並べ</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .board {
+            display: grid;
+            grid-template-columns: repeat(9, 40px);
+            gap: 2px;
+            border: 2px solid black;
+            padding: 5px;
+        }
+        .cell {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid gray;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .cell:hover {
+            background-color: lightgray;
+        }
+        #current-player {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>量子五目並べ</h1>
+    <div id="current-player">先手: X</div>
+    <div class="board" id="board"></div>
+    <button id="collapse">量子状態を確定</button>
+    <button id="undo">元に戻す</button>
+    
+    <script>
+        $(document).ready(function () {
+            const BOARD_SIZE = 9;
+            const EMPTY = "";
+            let player = "X";
+            let superpositions = [];
+            let previousBoard = [];
+            let boardStateSaved = false;
+
+            function updateCurrentPlayer() {
+                $("#current-player").text(`現在の手番: ${player}`);
+            }
+
+            function createBoard() {
+                for (let row = 0; row < BOARD_SIZE; row++) {
+                    for (let col = 0; col < BOARD_SIZE; col++) {
+                        $("#board").append(`<div class='cell' data-row='${row}' data-col='${col}'></div>`);
+                    }
+                }
+            }
+
+            function saveBoardState() {
+                previousBoard = [];
+                $(".cell").each(function () {
+                    previousBoard.push($(this).text());
+                });
+                boardStateSaved = true;
+            }
+
+            function restoreBoardState() {
+                if (boardStateSaved) {
+                    $(".cell").each(function (index) {
+                        $(this).text(previousBoard[index]);
+                    });
+                    boardStateSaved = false;
+                }
+            }
+
+            $(document).on("click", ".cell", function () {
+                let row = $(this).data("row");
+                let col = $(this).data("col");
+                if ($(this).text() === EMPTY) {
+                    $(this).text(`?(${player})`);
+                    superpositions.push({ row, col, player });
+                    player = player === "X" ? "O" : "X";
+                    updateCurrentPlayer();
+                }
+            });
+
+            $("#collapse").click(function () {
+                if (!boardStateSaved) saveBoardState();
+                superpositions.forEach(({ row, col, player }) => {
+                    let finalPlayer = player;
+                    if (Math.random() < 0.1) {
+                        finalPlayer = player === "X" ? "O" : "X";
+                    }
+                    $(`.cell[data-row='${row}'][data-col='${col}']`).text(finalPlayer);
+                });
+                superpositions = [];
+                updateCurrentPlayer();
+            });
+
+            $("#undo").click(function () {
+                restoreBoardState();
+                superpositions = [];
+                updateCurrentPlayer();
+            });
+
+            createBoard();
+            updateCurrentPlayer();
+        });
+    </script>
+</body>
+</html>
